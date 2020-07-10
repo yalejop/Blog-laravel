@@ -29,7 +29,7 @@
                        </div>
                        <div class="form-group">
                         <label> Contenido Embebido:</label>
-                        <textarea name="iframe" id="body" cols="30" rows="6" class="form-control" required>{{ old('iframe', $post->iframe) }}</textarea>
+                        <textarea name="iframe" id="body" cols="30" rows="6" class="form-control" >{{ old('iframe', $post->iframe) }}</textarea>
                          </div>
                          <div class="form-group">
                              @csrf
