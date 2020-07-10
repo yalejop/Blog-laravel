@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Post;
 use App\Http\Requests\PostRequest;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -70,9 +71,24 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(PostRequest $request, Post $post)
     {
-        //
+        //dd($request->all());
+        //$post->update($request->all());
+        $post->update([
+            'title' => $request->title,
+            'body' => $request->body,
+            'iframe' => $request->iframe
+        ]);
+
+         //image
+         if ($request->file('file')) {
+            Storage::disk('public')->delete($post->image);
+            $post->image = $request->file('file')->store('posts', 'public');
+            $post->save();
+        }
+
+        return back()->with('status', 'Actualizado con Éxito');
     }
 
     /**
@@ -83,6 +99,11 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        //eliminación de la imagen
+        Storage::disk('public')->delete($post->image);
+
+        $post->delete();
+
+        return back()->with('status', 'Eliminado con Éxito');
     }
 }
